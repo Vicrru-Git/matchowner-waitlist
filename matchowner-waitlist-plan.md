@@ -40,7 +40,8 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 - **Done:** Phase 1 (Bootstrap project + design tokens, build) — commit `ad10061`. Local repo only; no remote configured yet, push skipped.
 - **Done:** Phase 2 (Landing / Hero screen, build) — commit `62cbd0d`; build/lint/tsc green, 500-copy + no-anchors verified. No remote yet, push still deferred.
 - **Done:** Phase 2.5 (Hero fix — no-scroll + MatchDeck, build) — see Status tracker for SHA; replaces the 4 pill-badges with an auto-cycling Tinder-style card deck and enforces `100svh` no-overflow layout.
-- **Next pending:** Phase 3 (Hero live-verify) — now re-verifies the reworked hero.
+- **Done:** Phase 2.6 (Hero fix — drop WalkingHand, drag-swipe deck, build) — see Status tracker for SHA; removes the walking-hand placeholder from the page (file kept on disk), centers and enlarges the deck, adds drag-to-swipe left/right with a tilt that tracks the finger.
+- **Next pending:** Phase 3 (Hero live-verify) — now re-verifies the latest hero.
 - **Blocked relations:** strictly linear — Phase N+1 depends on Phase N. Verify phases (3, 5, 7) gate the next build phase.
 
 ## Invariants (every phase must preserve all)
@@ -135,6 +136,26 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 - `grep -F 'h-[100svh]' src/app/page.tsx` returns a match.
 - `grep -RE 'fetch\(|axios|supabase' src/` returns nothing.
 **Status:** done — see Status tracker for commit SHA. (Visual no-scroll claim is sanity-checked by CSS math; the real proof is Phase 3 live-verify.)
+**Stop after this phase.** Recommend `/clear` + `continue plan matchowner-waitlist-plan.md`.
+
+## Phase 2.6 — Hero fix: drop WalkingHand, drag-swipe deck   *(build phase, fix)*
+
+**Type:** build (inserted fix after the user reviewed the Phase 2.5 hero in the live app and asked to remove the walking-hand "dancy" placeholder, center and enlarge the deck, and add drag-to-swipe).
+**Goal:** Make the deck the sole visual focus of the hero, larger and centered, with first-class drag interaction (left or right) that tilts the card with the finger and fires the swipe-out animation once the threshold is crossed.
+**Context to load:** this plan file; `src/app/page.tsx`; `src/components/landing/MatchDeck.tsx`.
+**Targets:** `src/components/landing/MatchDeck.tsx` (rewrite for drag), `src/app/page.tsx` (drop WalkingHand import + usage, simplify visual column).
+**Change sketch (as shipped):**
+- `MatchDeck.tsx`: split into `MatchDeck` (state + auto-cycle) and `Card` (drag-enabled, owns its own `x` MotionValue so each instance starts at 0 and the exit animation reads the current dragged offset). Threshold: 90px **or** 500px/s velocity. Rotation drives off `x` via `useTransform([-220, 0, 220], [-20, 0, 20])`. Variants are `enter` / `center` / `exit(dir)` — exit flicks off in the swipe direction. Auto-cycle still runs every 3.4s; reduced-motion disables both the cycle and the drag.
+- Size bumped: `w-[240px] h-[290px]` mobile, `w-[270px] h-[330px]` sm, `w-[290px] h-[360px]` lg. Bigger label font, three-row layout (icon row, label, "← Desliza →" hint).
+- `page.tsx`: drop the `WalkingHand` import and the overlap wrapper; visual column is now just `<MatchDeck cards={…} />` centered.
+- `WalkingHand.tsx` left on disk — unused but kept until the asset story is decided (Mario & Rafa pending).
+**Invariants impacted:** 2, 3, 4, 5, 6.
+**Verification:**
+- `npm run build`, `npm run lint`, `npx tsc --noEmit` all exit 0.
+- `grep -F 'WalkingHand' src/app/page.tsx` returns nothing.
+- `grep -F 'drag=' src/components/landing/MatchDeck.tsx` returns a match.
+- `grep -F 'h-[100svh]' src/app/page.tsx` still returns a match.
+**Status:** done — see Status tracker for SHA. Real proof of the no-scroll claim and the drag UX is the next live-verify.
 **Stop after this phase.** Recommend `/clear` + `continue plan matchowner-waitlist-plan.md`.
 
 ## Phase 3 — Hero live-verify   *(live-verify phase)*
@@ -280,7 +301,8 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 - Phase 1 (Bootstrap project + design tokens, build) — done — commit `ad10061`, build/lint/tsc green, tokens & `lang="es"` verified; no remote, push deferred
 - Phase 2 (Landing / Hero screen, build) — done — commit `62cbd0d`, build/lint/tsc green; hero inlined in `page.tsx` (128 lines), `WalkingHand.tsx` placeholder retained, no remote push
 - Phase 2.5 (Hero fix — no-scroll + MatchDeck, build) — done — commit `7633ccf`, build/lint/tsc green; MatchDeck added, page.tsx rewritten to `h-[100svh] overflow-hidden`, subhead shortened
-- Phase 3 (Hero live-verify, verify) — pending — re-verifies the Phase 2.5 reworked hero
+- Phase 2.6 (Hero fix — drop WalkingHand, drag-swipe deck, build) — done — commit `<pending>`, build/lint/tsc green; deck is now centered, enlarged, and drag-to-swipe; WalkingHand removed from page (file kept on disk)
+- Phase 3 (Hero live-verify, verify) — pending — re-verifies the Phase 2.6 hero
 - Phase 4 (Sign-up screen, build) — pending
 - Phase 5 (Sign-up live-verify, verify) — pending
 - Phase 6 (Dashboard screen, build) — pending

@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 import { landing } from "@/data/landing";
-import { WalkingHand } from "@/components/landing/WalkingHand";
 import { MatchDeck } from "@/components/landing/MatchDeck";
 
 export default function Page() {
@@ -107,18 +106,9 @@ export default function Page() {
 
           <motion.div
             variants={fadeInUp}
-            className="relative flex items-center justify-center"
+            className="flex items-center justify-center"
           >
-            <div className="relative mx-auto h-[200px] w-full max-w-[360px] sm:h-[230px] sm:max-w-[460px] lg:h-[260px] lg:max-w-[500px]">
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
-                <div className="origin-bottom scale-[0.7] sm:scale-[0.85] lg:scale-100">
-                  <WalkingHand />
-                </div>
-              </div>
-              <div className="absolute right-0 top-0 sm:top-1 lg:top-2">
-                <MatchDeck cards={landing.matchCards} />
-              </div>
-            </div>
+            <MatchDeck cards={landing.matchCards} />
           </motion.div>
         </div>
       </motion.section>
