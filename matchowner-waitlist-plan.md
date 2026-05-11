@@ -38,7 +38,7 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 ## Status snapshot
 
 - **Done:** Phase 1 (Bootstrap project + design tokens, build) — commit `ad10061`. Local repo only; no remote configured yet, push skipped.
-- **Done:** Phase 2 (Landing / Hero screen, build) — commit pending below; build/lint/tsc green, 500-copy + no-anchors verified.
+- **Done:** Phase 2 (Landing / Hero screen, build) — commit `62cbd0d`; build/lint/tsc green, 500-copy + no-anchors verified. No remote yet, push still deferred.
 - **Next pending:** Phase 3 (Hero live-verify). Recommended next session start.
 - **Blocked relations:** strictly linear — Phase N+1 depends on Phase N. Verify phases (3, 5, 7) gate the next build phase.
 
@@ -257,7 +257,7 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 ## Status tracker
 
 - Phase 1 (Bootstrap project + design tokens, build) — done — commit `ad10061`, build/lint/tsc green, tokens & `lang="es"` verified; no remote, push deferred
-- Phase 2 (Landing / Hero screen, build) — done — commit pending (see git log), build/lint/tsc green; hero inlined in `page.tsx` (128 lines), `WalkingHand.tsx` placeholder retained
+- Phase 2 (Landing / Hero screen, build) — done — commit `62cbd0d`, build/lint/tsc green; hero inlined in `page.tsx` (128 lines), `WalkingHand.tsx` placeholder retained, no remote push
 - Phase 3 (Hero live-verify, verify) — pending
 - Phase 4 (Sign-up screen, build) — pending
 - Phase 5 (Sign-up live-verify, verify) — pending
