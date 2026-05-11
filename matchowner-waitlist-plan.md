@@ -42,7 +42,8 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 - **Done:** Phase 2.5 (Hero fix — no-scroll + MatchDeck, build) — see Status tracker for SHA; replaces the 4 pill-badges with an auto-cycling Tinder-style card deck and enforces `100svh` no-overflow layout.
 - **Done:** Phase 2.6 (Hero fix — drop WalkingHand, drag-swipe deck, build) — see Status tracker for SHA; removes the walking-hand placeholder from the page (file kept on disk), centers and enlarges the deck, adds drag-to-swipe left/right with a tilt that tracks the finger.
 - **Done:** Phase 3 (Hero live-verify) — empty commit `44b7376`. Auto-cycle, drag-right, drag-left, flick, mobile layout, CTA → /signup 404, clean console — all confirmed by the user.
-- **Next pending:** Phase 4 (Sign-up screen, build).
+- **Done:** Phase 4 (Sign-up screen, build) — commit `1ffe54f`; build/lint/tsc green, `/signup` route with Nombre/Correo/Teléfono fields, mocked Google button, localStorage persistence via `saveMockUser`, no backend calls.
+- **Next pending:** Phase 5 (Sign-up live-verify).
 - **Blocked relations:** strictly linear — Phase N+1 depends on Phase N. Verify phases (3, 5, 7) gate the next build phase.
 
 ## Invariants (every phase must preserve all)
@@ -207,7 +208,7 @@ Open `http://localhost:3000`.
 - `src/app/signup/page.tsx` exists.
 - `grep -F 'localStorage' src/lib/mockUser.ts` returns a match (confirms mock persistence is wired, not faked-faked).
 - `grep -RE 'fetch\(|axios|supabase' src/app/signup` returns nothing (confirms no real backend snuck in).
-**Status:** pending.
+**Status:** done — commit `1ffe54f`. Build/lint/tsc green. `/signup` page renders the form with mocked Google button; both submit paths call `saveMockUser` (writes `{ userId, createdAt, name, email, phone?, provider }` to `localStorage.matchowner_waitlist_user`) and `router.push("/dashboard")`. Copy lives in `src/data/signup.ts`. No new deps; plain `useState` for the form.
 **Stop after this phase.** Recommend `/clear` + `continue plan matchowner-waitlist-plan.md`.
 
 ## Phase 5 — Sign-up live-verify   *(live-verify phase)*
@@ -304,7 +305,7 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 - Phase 2.5 (Hero fix — no-scroll + MatchDeck, build) — done — commit `7633ccf`, build/lint/tsc green; MatchDeck added, page.tsx rewritten to `h-[100svh] overflow-hidden`, subhead shortened
 - Phase 2.6 (Hero fix — drop WalkingHand, drag-swipe deck, build) — done — commit `e2abc78`, build/lint/tsc green; deck is now centered, enlarged, and drag-to-swipe; WalkingHand removed from page (file kept on disk)
 - Phase 3 (Hero live-verify, verify) — done — empty commit `44b7376`; user confirmed auto-cycle, drag in both directions, flick, mobile layout, CTA-to-404, clean console
-- Phase 4 (Sign-up screen, build) — pending
+- Phase 4 (Sign-up screen, build) — done — commit `1ffe54f`, build/lint/tsc green; `/signup` route with Nombre/Correo/Teléfono, mocked Google button, `saveMockUser` writes to `localStorage.matchowner_waitlist_user`, routes to `/dashboard`
 - Phase 5 (Sign-up live-verify, verify) — pending
 - Phase 6 (Dashboard screen, build) — pending
 - Phase 7 (Dashboard end-to-end live-verify, verify) — pending
