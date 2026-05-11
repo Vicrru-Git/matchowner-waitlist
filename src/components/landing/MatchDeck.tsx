@@ -2,6 +2,7 @@
 
 import {
   AnimatePresence,
+  animate,
   motion,
   useMotionValue,
   useReducedMotion,
@@ -9,26 +10,66 @@ import {
 } from "framer-motion";
 import type { PanInfo, Variants } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
-import { Check, KeyRound, MapPin, Rocket, Users } from "lucide-react";
+import { Medal, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-const ICONS: Record<string, LucideIcon> = {
-  rocket: Rocket,
-  users: Users,
-  key: KeyRound,
-  map: MapPin,
-};
+export type PrizeTier = "gold" | "silver" | "bronze" | "honorable";
 
-export type MatchCardItem = {
+export type PrizeCardItem = {
   id: string;
-  icon: "rocket" | "users" | "key" | "map";
-  label: string;
+  tier: PrizeTier;
+  rankLabel: string;
+  title: string;
   meta: string;
 };
 
-const CYCLE_MS = 3400;
 const SWIPE_THRESHOLD_PX = 90;
 const SWIPE_VELOCITY = 500;
+const NUDGE_DELAY_MS = 750;
+
+type TierStyle = {
+  cardBg: string;
+  medalBg: string;
+  medalFg: string;
+  tierBg: string;
+  tierFg: string;
+  Icon: LucideIcon;
+};
+
+const TIERS: Record<PrizeTier, TierStyle> = {
+  gold: {
+    cardBg: "linear-gradient(160deg,#FFFCEF 0%,#FCEFAC 100%)",
+    medalBg: "#FCD466",
+    medalFg: "#6E4A09",
+    tierBg: "#6E4A09",
+    tierFg: "#FFF7DC",
+    Icon: Medal,
+  },
+  silver: {
+    cardBg: "linear-gradient(160deg,#F8F9FB 0%,#DCE1E8 100%)",
+    medalBg: "#C9D0D8",
+    medalFg: "#3A4451",
+    tierBg: "#3A4451",
+    tierFg: "#F4F6F8",
+    Icon: Medal,
+  },
+  bronze: {
+    cardBg: "linear-gradient(160deg,#FFF1E3 0%,#F9D6B0 100%)",
+    medalBg: "#D58A4A",
+    medalFg: "#FFFFFF",
+    tierBg: "#7A4118",
+    tierFg: "#FFF1E3",
+    Icon: Medal,
+  },
+  honorable: {
+    cardBg: "linear-gradient(160deg,#EFF7FB 0%,#B8E4EF 100%)",
+    medalBg: "#B8E4EF",
+    medalFg: "#2A4F8A",
+    tierBg: "#2A4F8A",
+    tierFg: "#EFF7FB",
+    Icon: Sparkles,
+  },
+};
 
 const cardVariants: Variants = {
   enter: { y: 26, scale: 0.92, opacity: 0, rotate: 0 },
@@ -42,26 +83,25 @@ const cardVariants: Variants = {
   }),
 };
 
-export function MatchDeck({ cards }: { cards: readonly MatchCardItem[] }) {
+export function MatchDeck({ prizes }: { prizes: readonly PrizeCardItem[] }) {
   const [{ index, direction }, setState] = useState({ index: 0, direction: 1 });
+  const [interacted, setInteracted] = useState(false);
   const reduce = useReducedMotion();
 
   const advance = useCallback(
-    (dir: number) =>
+    (dir: number) => {
+      setInteracted(true);
       setState((s) => ({
-        index: (s.index + 1) % cards.length,
+        index: (s.index + 1) % prizes.length,
         direction: dir,
-      })),
-    [cards.length],
+      }));
+    },
+    [prizes.length],
   );
 
-  useEffect(() => {
-    if (reduce) return;
-    const id = window.setInterval(() => advance(1), CYCLE_MS);
-    return () => window.clearInterval(id);
-  }, [advance, reduce]);
+  const onInteract = useCallback(() => setInteracted(true), []);
 
-  const top = cards[index];
+  const top = prizes[index];
 
   return (
     <div className="relative mx-auto h-[290px] w-[240px] sm:h-[330px] sm:w-[270px] lg:h-[360px] lg:w-[290px]">
@@ -80,7 +120,9 @@ export function MatchDeck({ cards }: { cards: readonly MatchCardItem[] }) {
           card={top}
           direction={direction}
           onSwipe={advance}
+          onInteract={onInteract}
           reduce={!!reduce}
+          isInitial={!interacted}
         />
       </AnimatePresence>
     </div>
@@ -91,16 +133,21 @@ function Card({
   card,
   direction,
   onSwipe,
+  onInteract,
   reduce,
+  isInitial,
 }: {
-  card: MatchCardItem;
+  card: PrizeCardItem;
   direction: number;
   onSwipe: (dir: number) => void;
+  onInteract: () => void;
   reduce: boolean;
+  isInitial: boolean;
 }) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-220, 0, 220], [-20, 0, 20]);
-  const Icon = ICONS[card.icon];
+  const tier = TIERS[card.tier];
+  const Icon = tier.Icon;
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
     if (
@@ -111,53 +158,62 @@ function Card({
     }
   };
 
+  useEffect(() => {
+    if (!isInitial || reduce) return;
+    const t = window.setTimeout(() => {
+      animate(x, [0, 28, -8, 0], {
+        duration: 1.1,
+        times: [0, 0.35, 0.7, 1],
+        ease: [0.4, 0, 0.2, 1],
+      });
+    }, NUDGE_DELAY_MS);
+    return () => window.clearTimeout(t);
+  }, [isInitial, reduce, x]);
+
   return (
     <motion.div
       drag={reduce ? false : "x"}
       dragConstraints={{ left: 0, right: 0 }}
       dragElastic={0.9}
+      onDragStart={onInteract}
       onDragEnd={onDragEnd}
-      style={{ x, rotate }}
+      style={{ x, rotate, background: tier.cardBg }}
       variants={cardVariants}
       initial="enter"
       animate="center"
       exit="exit"
       custom={direction}
       transition={{ type: "spring", stiffness: 240, damping: 26 }}
-      className="absolute inset-0 flex cursor-grab touch-pan-y flex-col justify-between rounded-3xl border border-white/55 bg-white p-5 text-left shadow-[0_30px_64px_-12px_rgba(15,30,60,0.55)] outline-none active:cursor-grabbing sm:p-6"
-      aria-label={`${card.label}. Desliza a la derecha o a la izquierda para ver la siguiente plaza.`}
+      className="absolute inset-0 flex cursor-grab touch-pan-y flex-col justify-between rounded-3xl border border-white/60 p-5 text-left shadow-[0_30px_64px_-12px_rgba(15,30,60,0.55)] outline-none active:cursor-grabbing sm:p-6"
+      aria-label={`Premio ${card.rankLabel}: ${card.title}. Desliza para ver el siguiente.`}
     >
       <div className="flex items-start justify-between">
-        <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--primary)]/10 text-[var(--primary)] sm:h-12 sm:w-12">
-          <Icon size={22} strokeWidth={2.2} />
+        <span
+          className="inline-flex h-11 w-11 items-center justify-center rounded-2xl sm:h-12 sm:w-12"
+          style={{ backgroundColor: tier.medalBg, color: tier.medalFg }}
+        >
+          <Icon size={22} strokeWidth={2.4} />
         </span>
-        <Stamp />
+        <span
+          className="inline-flex items-center rounded-full px-2.5 py-1 font-heading text-[10px] font-extrabold uppercase tracking-[0.18em] sm:text-[11px]"
+          style={{ backgroundColor: tier.tierBg, color: tier.tierFg }}
+        >
+          {card.rankLabel}
+        </span>
       </div>
+
       <div>
-        <p className="font-heading text-[22px] font-extrabold leading-[1.08] text-[var(--primary)] sm:text-[24px] lg:text-[26px]">
-          {card.label}
+        <p className="font-heading text-[19px] font-extrabold leading-[1.1] tracking-tight text-[var(--text-primary)] sm:text-[21px] lg:text-[23px]">
+          {card.title}
         </p>
-        <p className="mt-1.5 font-body text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--primary)]/55 sm:text-[12px]">
+        <p className="mt-1.5 font-body text-[11px] leading-snug text-[var(--text-secondary)]/75 sm:text-[12px]">
           {card.meta}
         </p>
       </div>
-      <div className="text-center font-body text-[10px] font-semibold uppercase tracking-[0.24em] text-[var(--primary)]/35 sm:text-[11px]">
+
+      <div className="text-center font-body text-[10px] font-semibold uppercase tracking-[0.24em] text-[var(--text-primary)]/40 sm:text-[11px]">
         ← Desliza →
       </div>
     </motion.div>
-  );
-}
-
-function Stamp() {
-  return (
-    <motion.span
-      initial={{ scale: 0.5, opacity: 0, rotate: -14 }}
-      animate={{ scale: 1, opacity: 1, rotate: -14 }}
-      transition={{ delay: 0.22, type: "spring", stiffness: 360, damping: 18 }}
-      className="inline-flex items-center gap-1 rounded-md border-[1.5px] border-[var(--secondary)] bg-[var(--secondary)]/10 px-2 py-[2px] font-heading text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--secondary)] sm:text-[11px]"
-    >
-      <Check size={11} strokeWidth={3} />
-      Match
-    </motion.span>
   );
 }

@@ -1,10 +1,10 @@
 export const signup = {
   back: "Volver",
   wordmark: "Match Owner",
-  eyebrow: "Únete a la waitlist",
-  title: "Reserva tu plaza beta",
+  eyebrow: "Premio para los 10 primeros",
+  title: "Reserva tu sitio en la carrera",
   subhead:
-    "Crea tu cuenta. Te avisamos en cuanto abramos invitaciones en tu ciudad.",
+    "Te damos un puesto inicial. Cada amig@ que invites te sube — los 10 primeros se llevan premio.",
   google: "Continuar con Google",
   divider: "o con tu correo",
   fields: {
@@ -21,6 +21,6 @@ export const signup = {
     emailRequired: "Necesitamos tu correo.",
     emailInvalid: "Ese correo no parece válido.",
   },
-  submit: "Unirme a la waitlist",
-  note: "500 plazas beta · acceso prioritario",
+  submit: "Quiero mi sitio",
+  note: "500 plazas · 10 premios · invita para subir",
 };

@@ -49,7 +49,11 @@ export default function Page() {
               variants={fadeInUp}
               className="mt-3 font-heading text-[22px] font-extrabold leading-[1.08] tracking-tight sm:text-[32px] lg:text-[44px]"
             >
-              {landing.headline.pre}{" "}
+              {landing.headline.pre && (
+                <>
+                  {landing.headline.pre}{" "}
+                </>
+              )}
               <span className="relative inline-block">
                 <span className="text-[var(--secondary)]">
                   {landing.headline.highlight}
@@ -106,9 +110,14 @@ export default function Page() {
 
           <motion.div
             variants={fadeInUp}
-            className="flex items-center justify-center"
+            className="flex flex-col items-center justify-center gap-2.5 sm:gap-3"
           >
-            <MatchDeck cards={landing.matchCards} />
+            <p className="inline-flex items-center gap-1.5 font-body text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--accent)] sm:text-[11px]">
+              <span aria-hidden>←</span>
+              {landing.deckCaption}
+              <span aria-hidden>→</span>
+            </p>
+            <MatchDeck prizes={landing.prizes} />
           </motion.div>
         </div>
       </motion.section>
