@@ -37,8 +37,8 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 
 ## Status snapshot
 
-- **Done:** none yet.
-- **Next pending:** Phase 1 (Bootstrap project + design tokens, build). Recommended next session start.
+- **Done:** Phase 1 (Bootstrap project + design tokens, build) — commit `ad10061`. Local repo only; no remote configured yet, push skipped.
+- **Next pending:** Phase 2 (Landing / Hero screen, build). Recommended next session start.
 - **Blocked relations:** strictly linear — Phase N+1 depends on Phase N. Verify phases (3, 5, 7) gate the next build phase.
 
 ## Invariants (every phase must preserve all)
@@ -84,7 +84,7 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 - `grep -F 'lang="es"' src/app/layout.tsx` returns a match.
 - `package.json` lists `framer-motion` and `lucide-react` in `dependencies`.
 - `git log --oneline -1` shows the initial commit.
-**Status:** pending.
+**Status:** done — commit `ad10061`. Build/lint/tsc green. No remote configured; push deferred to whenever the user creates a GitHub repo.
 **Stop after this phase.** Recommend `/clear` + `continue plan matchowner-waitlist-plan.md`.
 
 ## Phase 2 — Landing / Hero screen   *(build phase)*
@@ -255,7 +255,7 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 
 ## Status tracker
 
-- Phase 1 (Bootstrap project + design tokens, build) — pending
+- Phase 1 (Bootstrap project + design tokens, build) — done — commit `ad10061`, build/lint/tsc green, tokens & `lang="es"` verified; no remote, push deferred
 - Phase 2 (Landing / Hero screen, build) — pending
 - Phase 3 (Hero live-verify, verify) — pending
 - Phase 4 (Sign-up screen, build) — pending
