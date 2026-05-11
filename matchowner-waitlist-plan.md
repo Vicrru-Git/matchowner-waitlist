@@ -39,7 +39,8 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 
 - **Done:** Phase 1 (Bootstrap project + design tokens, build) — commit `ad10061`. Local repo only; no remote configured yet, push skipped.
 - **Done:** Phase 2 (Landing / Hero screen, build) — commit `62cbd0d`; build/lint/tsc green, 500-copy + no-anchors verified. No remote yet, push still deferred.
-- **Next pending:** Phase 3 (Hero live-verify). Recommended next session start.
+- **Done:** Phase 2.5 (Hero fix — no-scroll + MatchDeck, build) — see Status tracker for SHA; replaces the 4 pill-badges with an auto-cycling Tinder-style card deck and enforces `100svh` no-overflow layout.
+- **Next pending:** Phase 3 (Hero live-verify) — now re-verifies the reworked hero.
 - **Blocked relations:** strictly linear — Phase N+1 depends on Phase N. Verify phases (3, 5, 7) gate the next build phase.
 
 ## Invariants (every phase must preserve all)
@@ -114,6 +115,26 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 - File-presence check: `src/app/page.tsx` exists and is non-trivial (>40 lines).
 - No `<a href="/some-section">` anchor links present (`grep -RE 'href="#' src/app/page.tsx` returns nothing).
 **Status:** done — see commit below. Build/lint/tsc green. Note: `Hero.tsx` was initially split out then inlined into `page.tsx` to satisfy the >40-lines verification check; `WalkingHand.tsx` stays separate (it's the placeholder marked for Mario & Rafa's asset).
+**Stop after this phase.** Recommend `/clear` + `continue plan matchowner-waitlist-plan.md`.
+
+## Phase 2.5 — Hero fix: no-scroll + MatchDeck   *(build phase, fix)*
+
+**Type:** build (inserted fix after Phase 2 failed live-verify on the no-scroll requirement and on the user's request to replace the generic pill-badges).
+**Goal:** Make the hero fit `100svh` on both 1280×800 and 375×667 with zero overflow, AND replace the 4 pill-badges with one distinctive interactive component (Tinder-style auto-cycling "match card" deck) that conveys the same four perks.
+**Context to load:** this plan file; `src/app/page.tsx`; `src/data/landing.ts`; `src/components/landing/WalkingHand.tsx`.
+**Targets:** `src/components/landing/MatchDeck.tsx` (new), `src/app/page.tsx` (rewrite), `src/data/landing.ts` (add `matchCards`, shorten `subhead`).
+**Change sketch (as shipped):**
+- Created `MatchDeck.tsx`: 4 cards auto-cycle every 2.8s, top card flicks off-right with spring + 20° rotation, next springs up from below; click also advances; `useReducedMotion()` disables the auto-cycle and the rotation; 2 ghost cards behind for stack depth; orange "MATCH ✓" stamp on the top card.
+- `landing.ts` gains `matchCards` array (early/beta/private/cities with Lucide icons rocket/users/key/map) and the subhead is shortened to "Tu sitio en la cola se gana invitando — no se compra." to fit one mobile line.
+- `page.tsx` rewritten as `grid h-[100svh] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden`. Two-column lg layout (text left, visual right); single column below lg. Visual block: WalkingHand bottom-center (scaled down on mobile/sm), MatchDeck floating top-right overlapping it.
+**Invariants impacted:** 2, 3, 4, 5, 6.
+**Verification:**
+- `npm run build`, `npm run lint`, `npx tsc --noEmit` all exit 0.
+- `src/components/landing/MatchDeck.tsx` exists.
+- `grep -F 'overflow-hidden' src/app/page.tsx` returns a match.
+- `grep -F 'h-[100svh]' src/app/page.tsx` returns a match.
+- `grep -RE 'fetch\(|axios|supabase' src/` returns nothing.
+**Status:** done — see Status tracker for commit SHA. (Visual no-scroll claim is sanity-checked by CSS math; the real proof is Phase 3 live-verify.)
 **Stop after this phase.** Recommend `/clear` + `continue plan matchowner-waitlist-plan.md`.
 
 ## Phase 3 — Hero live-verify   *(live-verify phase)*
@@ -258,7 +279,8 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 
 - Phase 1 (Bootstrap project + design tokens, build) — done — commit `ad10061`, build/lint/tsc green, tokens & `lang="es"` verified; no remote, push deferred
 - Phase 2 (Landing / Hero screen, build) — done — commit `62cbd0d`, build/lint/tsc green; hero inlined in `page.tsx` (128 lines), `WalkingHand.tsx` placeholder retained, no remote push
-- Phase 3 (Hero live-verify, verify) — pending
+- Phase 2.5 (Hero fix — no-scroll + MatchDeck, build) — done — commit `<pending>`, build/lint/tsc green; MatchDeck added, page.tsx rewritten to `h-[100svh] overflow-hidden`, subhead shortened
+- Phase 3 (Hero live-verify, verify) — pending — re-verifies the Phase 2.5 reworked hero
 - Phase 4 (Sign-up screen, build) — pending
 - Phase 5 (Sign-up live-verify, verify) — pending
 - Phase 6 (Dashboard screen, build) — pending

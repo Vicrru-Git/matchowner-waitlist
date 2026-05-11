@@ -1,3 +1,32 @@
+import type { MatchCardItem } from "@/components/landing/MatchDeck";
+
+const matchCards: readonly MatchCardItem[] = [
+  {
+    id: "early",
+    icon: "rocket",
+    label: "Acceso anticipado",
+    meta: "Antes que nadie",
+  },
+  {
+    id: "beta",
+    icon: "users",
+    label: "500 plazas beta",
+    meta: "Cupo limitado",
+  },
+  {
+    id: "private",
+    icon: "key",
+    label: "Invitación privada",
+    meta: "Solo por enlace",
+  },
+  {
+    id: "cities",
+    icon: "map",
+    label: "Por ciudades",
+    meta: "Tu ciudad primero",
+  },
+];
+
 export const landing = {
   wordmark: "Match Owner",
   topBadge: "500 plazas beta",
@@ -7,14 +36,8 @@ export const landing = {
     highlight: "primer Match Owner",
     post: ".",
   },
-  subhead:
-    "Lanzamos por ciudades, con cupo limitado. Tu sitio en la cola se gana invitando y respondiendo — no se compra.",
-  bullets: [
-    "Acceso anticipado",
-    "500 plazas beta",
-    "Invitación privada",
-    "Lanzamiento por ciudades",
-  ],
+  subhead: "Tu sitio en la cola se gana invitando — no se compra.",
+  matchCards,
   cta: {
     label: "Unirme a la waitlist",
     href: "/signup",
@@ -25,4 +48,4 @@ export const landing = {
     suffix: "plazas reservadas",
   },
   footer: "© 2026 Match Owner · demo",
-} as const;
+};
