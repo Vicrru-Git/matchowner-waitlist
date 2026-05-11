@@ -301,7 +301,7 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 - Phase 1 (Bootstrap project + design tokens, build) — done — commit `ad10061`, build/lint/tsc green, tokens & `lang="es"` verified; no remote, push deferred
 - Phase 2 (Landing / Hero screen, build) — done — commit `62cbd0d`, build/lint/tsc green; hero inlined in `page.tsx` (128 lines), `WalkingHand.tsx` placeholder retained, no remote push
 - Phase 2.5 (Hero fix — no-scroll + MatchDeck, build) — done — commit `7633ccf`, build/lint/tsc green; MatchDeck added, page.tsx rewritten to `h-[100svh] overflow-hidden`, subhead shortened
-- Phase 2.6 (Hero fix — drop WalkingHand, drag-swipe deck, build) — done — commit `<pending>`, build/lint/tsc green; deck is now centered, enlarged, and drag-to-swipe; WalkingHand removed from page (file kept on disk)
+- Phase 2.6 (Hero fix — drop WalkingHand, drag-swipe deck, build) — done — commit `e2abc78`, build/lint/tsc green; deck is now centered, enlarged, and drag-to-swipe; WalkingHand removed from page (file kept on disk)
 - Phase 3 (Hero live-verify, verify) — pending — re-verifies the Phase 2.6 hero
 - Phase 4 (Sign-up screen, build) — pending
 - Phase 5 (Sign-up live-verify, verify) — pending
