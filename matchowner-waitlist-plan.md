@@ -41,7 +41,8 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 - **Done:** Phase 2 (Landing / Hero screen, build) — commit `62cbd0d`; build/lint/tsc green, 500-copy + no-anchors verified. No remote yet, push still deferred.
 - **Done:** Phase 2.5 (Hero fix — no-scroll + MatchDeck, build) — see Status tracker for SHA; replaces the 4 pill-badges with an auto-cycling Tinder-style card deck and enforces `100svh` no-overflow layout.
 - **Done:** Phase 2.6 (Hero fix — drop WalkingHand, drag-swipe deck, build) — see Status tracker for SHA; removes the walking-hand placeholder from the page (file kept on disk), centers and enlarges the deck, adds drag-to-swipe left/right with a tilt that tracks the finger.
-- **Next pending:** Phase 3 (Hero live-verify) — now re-verifies the latest hero.
+- **Done:** Phase 3 (Hero live-verify) — empty commit `44b7376`. Auto-cycle, drag-right, drag-left, flick, mobile layout, CTA → /signup 404, clean console — all confirmed by the user.
+- **Next pending:** Phase 4 (Sign-up screen, build).
 - **Blocked relations:** strictly linear — Phase N+1 depends on Phase N. Verify phases (3, 5, 7) gate the next build phase.
 
 ## Invariants (every phase must preserve all)
@@ -302,7 +303,7 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 - Phase 2 (Landing / Hero screen, build) — done — commit `62cbd0d`, build/lint/tsc green; hero inlined in `page.tsx` (128 lines), `WalkingHand.tsx` placeholder retained, no remote push
 - Phase 2.5 (Hero fix — no-scroll + MatchDeck, build) — done — commit `7633ccf`, build/lint/tsc green; MatchDeck added, page.tsx rewritten to `h-[100svh] overflow-hidden`, subhead shortened
 - Phase 2.6 (Hero fix — drop WalkingHand, drag-swipe deck, build) — done — commit `e2abc78`, build/lint/tsc green; deck is now centered, enlarged, and drag-to-swipe; WalkingHand removed from page (file kept on disk)
-- Phase 3 (Hero live-verify, verify) — pending — re-verifies the Phase 2.6 hero
+- Phase 3 (Hero live-verify, verify) — done — empty commit `44b7376`; user confirmed auto-cycle, drag in both directions, flick, mobile layout, CTA-to-404, clean console
 - Phase 4 (Sign-up screen, build) — pending
 - Phase 5 (Sign-up live-verify, verify) — pending
 - Phase 6 (Dashboard screen, build) — pending
