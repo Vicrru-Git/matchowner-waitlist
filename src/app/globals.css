@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+:root {
+  /* Colores principales */
+  --primary: #3563AE;
+  --primary-dark: #2A4F8A;
+  --primary-light: #4A7AC4;
+  --secondary: #ED5C2D;
+  --secondary-hover: #F47040;
+  --accent: #B8E4EF;
+  --accent-dark: #8ED0E0;
+
+  /* Fondos */
+  --bg-white: #FFFFFF;
+  --bg-gray: #F6F6F6;
+  --bg-gray-dark: #EBEBEB;
+  --bg-dark: #191919;
+
+  /* Textos */
+  --text-primary: #191919;
+  --text-secondary: #2A2A2A;
+  --text-muted: #6B7280;
+  --text-white: #FFFFFF;
+  --text-black: #000000;
+
+  /* Espaciado */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-light: var(--primary-light);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+  --color-bg-white: var(--bg-white);
+  --color-bg-gray: var(--bg-gray);
+  --color-bg-gray-dark: var(--bg-gray-dark);
+  --color-bg-dark: var(--bg-dark);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-white: var(--text-white);
+  --color-text-black: var(--text-black);
+  --font-heading: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+body {
+  background: var(--bg-white);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+html {
+  scroll-behavior: smooth;
+}
