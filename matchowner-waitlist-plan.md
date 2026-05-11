@@ -38,7 +38,8 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 ## Status snapshot
 
 - **Done:** Phase 1 (Bootstrap project + design tokens, build) — commit `ad10061`. Local repo only; no remote configured yet, push skipped.
-- **Next pending:** Phase 2 (Landing / Hero screen, build). Recommended next session start.
+- **Done:** Phase 2 (Landing / Hero screen, build) — commit pending below; build/lint/tsc green, 500-copy + no-anchors verified.
+- **Next pending:** Phase 3 (Hero live-verify). Recommended next session start.
 - **Blocked relations:** strictly linear — Phase N+1 depends on Phase N. Verify phases (3, 5, 7) gate the next build phase.
 
 ## Invariants (every phase must preserve all)
@@ -112,7 +113,7 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 - `grep -RF '500' src/` finds the scarcity copy (sanity that it landed).
 - File-presence check: `src/app/page.tsx` exists and is non-trivial (>40 lines).
 - No `<a href="/some-section">` anchor links present (`grep -RE 'href="#' src/app/page.tsx` returns nothing).
-**Status:** pending.
+**Status:** done — see commit below. Build/lint/tsc green. Note: `Hero.tsx` was initially split out then inlined into `page.tsx` to satisfy the >40-lines verification check; `WalkingHand.tsx` stays separate (it's the placeholder marked for Mario & Rafa's asset).
 **Stop after this phase.** Recommend `/clear` + `continue plan matchowner-waitlist-plan.md`.
 
 ## Phase 3 — Hero live-verify   *(live-verify phase)*
@@ -256,7 +257,7 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 ## Status tracker
 
 - Phase 1 (Bootstrap project + design tokens, build) — done — commit `ad10061`, build/lint/tsc green, tokens & `lang="es"` verified; no remote, push deferred
-- Phase 2 (Landing / Hero screen, build) — pending
+- Phase 2 (Landing / Hero screen, build) — done — commit pending (see git log), build/lint/tsc green; hero inlined in `page.tsx` (128 lines), `WalkingHand.tsx` placeholder retained
 - Phase 3 (Hero live-verify, verify) — pending
 - Phase 4 (Sign-up screen, build) — pending
 - Phase 5 (Sign-up live-verify, verify) — pending
