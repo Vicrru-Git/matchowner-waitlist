@@ -38,12 +38,12 @@ export default function Page() {
       >
         <motion.div
           variants={fadeInUp}
-          className="mx-auto flex w-full max-w-[340px] flex-col items-center text-center lg:col-start-1 lg:row-start-1 lg:mx-0 lg:max-w-none lg:items-start lg:self-end lg:text-left"
+          className="mx-auto flex w-full max-w-[clamp(340px,82vw,400px)] flex-col items-center text-center lg:col-start-1 lg:row-start-1 lg:mx-0 lg:max-w-none lg:items-start lg:self-end lg:text-left"
         >
           <p className="font-body text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--accent)] sm:text-[11px]">
             {landing.eyebrow}
           </p>
-          <h1 className="mt-2.5 font-heading text-[19px] font-extrabold leading-[1.1] tracking-tight sm:text-[26px] lg:text-[44px]">
+          <h1 className="mt-2.5 font-heading text-[clamp(19px,5.2vw,28px)] font-extrabold leading-[1.1] tracking-tight lg:text-[44px]">
             {landing.headline.pre && <>{landing.headline.pre} </>}
             <span className="relative inline-block">
               <span className="text-[var(--secondary)]">
@@ -51,12 +51,12 @@ export default function Page() {
               </span>
               <span
                 aria-hidden
-                className="absolute inset-x-0 -bottom-1 h-[3px] rounded-[3px] bg-[var(--secondary)] opacity-30 sm:h-[5px]"
+                className="absolute inset-x-0 -bottom-1 h-[clamp(3px,0.9vw,5px)] rounded-[3px] bg-[var(--secondary)] opacity-30"
               />
             </span>
             {landing.headline.post}
           </h1>
-          <p className="mt-2.5 max-w-[340px] font-body text-[12.5px] leading-[1.4] text-white/80 sm:text-[14px] lg:max-w-[460px] lg:text-[15px]">
+          <p className="mt-2.5 max-w-[clamp(340px,82vw,400px)] font-body text-[clamp(12.5px,3.3vw,15px)] leading-[1.4] text-white/80 lg:max-w-[460px] lg:text-[15px]">
             {landing.subhead}
           </p>
         </motion.div>
@@ -67,7 +67,7 @@ export default function Page() {
         >
           <span
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 -z-0 h-[280px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--accent)]/30 blur-[60px] sm:h-[310px] sm:w-[340px] lg:h-[360px] lg:w-[380px]"
+            className="pointer-events-none absolute left-1/2 top-1/2 -z-0 h-[280px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--accent)]/30 blur-[60px] min-[400px]:h-[310px] min-[400px]:w-[345px] min-[430px]:h-[335px] min-[430px]:w-[365px] sm:h-[355px] sm:w-[380px] lg:h-[360px] lg:w-[380px]"
           />
           <div className="relative z-10">
             <MatchDeck prizes={landing.prizes} />
@@ -76,11 +76,11 @@ export default function Page() {
 
         <motion.div
           variants={fadeInUp}
-          className="mx-auto flex w-full max-w-[320px] flex-col items-center gap-2.5 self-center lg:col-start-1 lg:row-start-2 lg:mx-0 lg:max-w-[420px] lg:items-start lg:gap-3"
+          className="mx-auto flex w-full max-w-[clamp(280px,80vw,360px)] flex-col items-center gap-2.5 self-center lg:col-start-1 lg:row-start-2 lg:mx-0 lg:max-w-[420px] lg:items-start lg:gap-3"
         >
           <Link
             href={landing.cta.href}
-            className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 font-body text-[14.5px] font-semibold transition-all hover:scale-[1.02] hover:bg-[var(--secondary-hover)] sm:py-3.5 sm:text-[16px] lg:px-8"
+            className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 font-body text-[clamp(14.5px,3.8vw,17px)] font-semibold transition-all hover:scale-[1.02] hover:bg-[var(--secondary-hover)] sm:py-3.5 lg:px-8 lg:text-[16px]"
             style={{ boxShadow: "0 14px 36px rgba(237,92,45,0.42)" }}
           >
             {landing.cta.label}

@@ -104,7 +104,7 @@ export function MatchDeck({ prizes }: { prizes: readonly PrizeCardItem[] }) {
   const top = prizes[index];
 
   return (
-    <div className="relative mx-auto h-[310px] w-[260px] sm:h-[330px] sm:w-[280px] lg:h-[360px] lg:w-[290px]">
+    <div className="relative mx-auto h-[310px] w-[260px] min-[400px]:h-[340px] min-[400px]:w-[285px] min-[430px]:h-[365px] min-[430px]:w-[305px] sm:h-[385px] sm:w-[320px] lg:h-[360px] lg:w-[290px]">
       <span
         aria-hidden
         className="absolute inset-0 translate-y-[14px] scale-[0.92] rounded-3xl bg-white/25 backdrop-blur-[2px]"
