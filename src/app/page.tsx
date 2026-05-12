@@ -17,7 +17,7 @@ export default function Page() {
       className="grid h-[100svh] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden bg-[var(--primary)] text-white"
       style={{
         backgroundImage:
-          "radial-gradient(ellipse at 50% 28%, rgba(184,228,239,0.22) 0%, rgba(53,99,174,0) 60%), radial-gradient(circle at 92% 0%, rgba(237,92,45,0.18) 0%, transparent 42%)",
+          "radial-gradient(ellipse at 50% 22%, rgba(184,228,239,0.22) 0%, rgba(53,99,174,0) 60%), radial-gradient(circle at 90% 0%, rgba(237,92,45,0.18) 0%, transparent 42%)",
       }}
     >
       <header className="mx-auto flex w-full max-w-[1180px] items-center justify-between px-5 pt-3 sm:px-8 sm:pt-5">
@@ -34,83 +34,85 @@ export default function Page() {
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
-        className="mx-auto flex w-full min-h-0 max-w-[1180px] flex-col px-5 pb-2 pt-3 sm:px-8 sm:pb-3 sm:pt-4"
+        className="mx-auto flex w-full min-h-0 max-w-[1180px] flex-col justify-between px-5 pb-2 pt-2 sm:px-8 sm:pb-3 sm:pt-3 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto] lg:items-center lg:justify-stretch lg:gap-x-12 lg:gap-y-5 lg:py-6"
       >
-        <div className="flex min-h-0 w-full flex-1 flex-col justify-between gap-3 sm:gap-4 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto] lg:items-center lg:justify-stretch lg:gap-x-12 lg:gap-y-5">
-          <motion.div
-            variants={fadeInUp}
-            className="flex w-full max-w-[520px] flex-col items-center self-center text-center lg:col-start-1 lg:row-start-1 lg:max-w-none lg:items-start lg:justify-end lg:self-end lg:text-left"
-          >
-            <p className="font-body text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--accent)] sm:text-[11px]">
-              {landing.eyebrow}
-            </p>
-
-            <h1 className="mt-2 font-heading text-[22px] font-extrabold leading-[1.08] tracking-tight sm:mt-3 sm:text-[32px] lg:text-[44px]">
-              {landing.headline.pre && <>{landing.headline.pre} </>}
-              <span className="relative inline-block">
-                <span className="text-[var(--secondary)]">
-                  {landing.headline.highlight}
-                </span>
-                <span
-                  aria-hidden
-                  className="absolute inset-x-0 -bottom-1 h-[4px] rounded-[3px] bg-[var(--secondary)] opacity-30 sm:h-[6px]"
-                />
+        <motion.div
+          variants={fadeInUp}
+          className="mx-auto flex w-full max-w-[340px] flex-col items-center text-center lg:col-start-1 lg:row-start-1 lg:mx-0 lg:max-w-none lg:items-start lg:self-end lg:text-left"
+        >
+          <p className="font-body text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--accent)] sm:text-[11px]">
+            {landing.eyebrow}
+          </p>
+          <h1 className="mt-2.5 font-heading text-[19px] font-extrabold leading-[1.1] tracking-tight sm:text-[26px] lg:text-[44px]">
+            {landing.headline.pre && <>{landing.headline.pre} </>}
+            <span className="relative inline-block">
+              <span className="text-[var(--secondary)]">
+                {landing.headline.highlight}
               </span>
-              {landing.headline.post}
-            </h1>
-
-            <p className="mt-2 max-w-[440px] font-body text-[13px] leading-snug text-white/85 sm:mt-3 sm:text-[15px]">
-              {landing.subhead}
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={fadeInUp}
-            className="flex items-center justify-center self-center lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center"
-          >
-            <MatchDeck prizes={landing.prizes} />
-          </motion.div>
-
-          <motion.div
-            variants={fadeInUp}
-            className="flex w-full max-w-[440px] flex-col items-stretch gap-2 self-center lg:col-start-1 lg:row-start-2 lg:max-w-[440px] lg:items-start lg:gap-3 lg:self-start"
-          >
-            <Link
-              href={landing.cta.href}
-              className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--secondary)] px-6 py-3 font-body text-[15px] font-semibold transition-all hover:scale-[1.01] hover:bg-[var(--secondary-hover)] sm:py-3.5 sm:text-[16px] lg:px-8"
-              style={{ boxShadow: "0 12px 32px rgba(237,92,45,0.4)" }}
-            >
-              {landing.cta.label}
-              <ArrowRight
-                size={17}
-                className="transition-transform group-hover:translate-x-0.5"
+              <span
+                aria-hidden
+                className="absolute inset-x-0 -bottom-1 h-[3px] rounded-[3px] bg-[var(--secondary)] opacity-30 sm:h-[5px]"
               />
-            </Link>
+            </span>
+            {landing.headline.post}
+          </h1>
+          <p className="mt-2.5 max-w-[340px] font-body text-[12.5px] leading-[1.4] text-white/80 sm:text-[14px] lg:max-w-[460px] lg:text-[15px]">
+            {landing.subhead}
+          </p>
+        </motion.div>
 
-            <div className="flex w-full items-center gap-3">
-              <div className="h-[5px] flex-1 overflow-hidden rounded-full bg-white/15">
-                <motion.div
-                  className="h-full rounded-full bg-[var(--accent)]"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${proofPct}%` }}
-                  transition={{ duration: 1.1, ease: "easeOut", delay: 0.4 }}
-                />
-              </div>
-              <p className="shrink-0 font-body text-[11px] text-white/75 sm:text-[12px]">
-                <span className="font-semibold text-white">
-                  {landing.socialProof.current}
-                </span>
-                <span className="text-white/55">
-                  /{landing.socialProof.total}
-                </span>{" "}
-                {landing.socialProof.suffix}
-              </p>
+        <motion.div
+          variants={fadeInUp}
+          className="relative flex items-center justify-center self-center lg:col-start-2 lg:row-span-2 lg:row-start-1"
+        >
+          <span
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-1/2 -z-0 h-[280px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--accent)]/30 blur-[60px] sm:h-[310px] sm:w-[340px] lg:h-[360px] lg:w-[380px]"
+          />
+          <div className="relative z-10">
+            <MatchDeck prizes={landing.prizes} />
+          </div>
+        </motion.div>
+
+        <motion.div
+          variants={fadeInUp}
+          className="mx-auto flex w-full max-w-[320px] flex-col items-center gap-2.5 self-center lg:col-start-1 lg:row-start-2 lg:mx-0 lg:max-w-[420px] lg:items-start lg:gap-3"
+        >
+          <Link
+            href={landing.cta.href}
+            className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 font-body text-[14.5px] font-semibold transition-all hover:scale-[1.02] hover:bg-[var(--secondary-hover)] sm:py-3.5 sm:text-[16px] lg:px-8"
+            style={{ boxShadow: "0 14px 36px rgba(237,92,45,0.42)" }}
+          >
+            {landing.cta.label}
+            <ArrowRight
+              size={17}
+              className="transition-transform group-hover:translate-x-0.5"
+            />
+          </Link>
+
+          <div className="flex w-full items-center gap-2.5">
+            <div className="h-[4px] flex-1 overflow-hidden rounded-full bg-white/15">
+              <motion.div
+                className="h-full rounded-full bg-[var(--accent)]"
+                initial={{ width: 0 }}
+                animate={{ width: `${proofPct}%` }}
+                transition={{ duration: 1.1, ease: "easeOut", delay: 0.4 }}
+              />
             </div>
-          </motion.div>
-        </div>
+            <p className="shrink-0 font-body text-[10.5px] text-white/70 sm:text-[11px]">
+              <span className="font-semibold text-white">
+                {landing.socialProof.current}
+              </span>
+              <span className="text-white/50">
+                /{landing.socialProof.total}
+              </span>{" "}
+              {landing.socialProof.suffix}
+            </p>
+          </div>
+        </motion.div>
       </motion.section>
 
-      <footer className="mx-auto w-full max-w-[1180px] px-5 pb-3 text-center font-body text-[10px] text-white/45 sm:px-8 sm:pb-4 sm:text-[11px]">
+      <footer className="mx-auto w-full max-w-[1180px] px-5 pb-2.5 text-center font-body text-[10px] text-white/45 sm:px-8 sm:pb-4 sm:text-[11px]">
         {landing.footer}
       </footer>
     </main>
