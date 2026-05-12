@@ -34,12 +34,12 @@ export default function Page() {
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
-        className="mx-auto flex w-full min-h-0 max-w-[1180px] items-center justify-center px-5 py-3 sm:px-8 sm:py-4"
+        className="mx-auto flex w-full min-h-0 max-w-[1180px] flex-col px-5 pb-2 pt-3 sm:px-8 sm:pb-3 sm:pt-4"
       >
-        <div className="flex w-full flex-col items-center gap-3 sm:gap-4 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto] lg:items-center lg:gap-x-12 lg:gap-y-5">
+        <div className="flex min-h-0 w-full flex-1 flex-col justify-between gap-3 sm:gap-4 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto] lg:items-center lg:justify-stretch lg:gap-x-12 lg:gap-y-5">
           <motion.div
             variants={fadeInUp}
-            className="flex w-full max-w-[520px] flex-col items-center text-center lg:col-start-1 lg:row-start-1 lg:max-w-none lg:items-start lg:justify-end lg:self-end lg:text-left"
+            className="flex w-full max-w-[520px] flex-col items-center self-center text-center lg:col-start-1 lg:row-start-1 lg:max-w-none lg:items-start lg:justify-end lg:self-end lg:text-left"
           >
             <p className="font-body text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--accent)] sm:text-[11px]">
               {landing.eyebrow}
@@ -66,14 +66,14 @@ export default function Page() {
 
           <motion.div
             variants={fadeInUp}
-            className="flex items-center justify-center lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center"
+            className="flex items-center justify-center self-center lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center"
           >
             <MatchDeck prizes={landing.prizes} />
           </motion.div>
 
           <motion.div
             variants={fadeInUp}
-            className="flex w-full max-w-[420px] flex-col items-stretch gap-2 lg:col-start-1 lg:row-start-2 lg:max-w-[420px] lg:items-start lg:gap-3 lg:self-start"
+            className="flex w-full max-w-[440px] flex-col items-stretch gap-2 self-center lg:col-start-1 lg:row-start-2 lg:max-w-[440px] lg:items-start lg:gap-3 lg:self-start"
           >
             <Link
               href={landing.cta.href}
