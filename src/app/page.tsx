@@ -17,7 +17,7 @@ export default function Page() {
       className="grid h-[100svh] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden bg-[var(--primary)] text-white"
       style={{
         backgroundImage:
-          "radial-gradient(ellipse at 50% 24%, rgba(184,228,239,0.22) 0%, rgba(53,99,174,0) 60%), radial-gradient(circle at 92% 0%, rgba(237,92,45,0.18) 0%, transparent 42%)",
+          "radial-gradient(ellipse at 50% 28%, rgba(184,228,239,0.22) 0%, rgba(53,99,174,0) 60%), radial-gradient(circle at 92% 0%, rgba(237,92,45,0.18) 0%, transparent 42%)",
       }}
     >
       <header className="mx-auto flex w-full max-w-[1180px] items-center justify-between px-5 pt-3 sm:px-8 sm:pt-5">
@@ -34,12 +34,12 @@ export default function Page() {
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
-        className="mx-auto flex w-full min-h-0 max-w-[1180px] items-stretch px-5 sm:px-8"
+        className="mx-auto flex w-full min-h-0 max-w-[1180px] items-center justify-center px-5 py-3 sm:px-8 sm:py-4"
       >
-        <div className="grid w-full min-h-0 grid-cols-1 grid-rows-[auto_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3 lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[1fr_auto] lg:items-stretch lg:gap-x-12 lg:gap-y-5 lg:py-6">
+        <div className="flex w-full flex-col items-center gap-3 sm:gap-4 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto] lg:items-center lg:gap-x-12 lg:gap-y-5">
           <motion.div
             variants={fadeInUp}
-            className="flex flex-col items-center text-center lg:col-start-1 lg:row-start-1 lg:items-start lg:justify-end lg:text-left"
+            className="flex w-full max-w-[520px] flex-col items-center text-center lg:col-start-1 lg:row-start-1 lg:max-w-none lg:items-start lg:justify-end lg:self-end lg:text-left"
           >
             <p className="font-body text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--accent)] sm:text-[11px]">
               {landing.eyebrow}
@@ -59,21 +59,21 @@ export default function Page() {
               {landing.headline.post}
             </h1>
 
-            <p className="mt-2 max-w-[420px] font-body text-[13px] leading-snug text-white/85 sm:mt-3 sm:text-[15px]">
+            <p className="mt-2 max-w-[440px] font-body text-[13px] leading-snug text-white/85 sm:mt-3 sm:text-[15px]">
               {landing.subhead}
             </p>
           </motion.div>
 
           <motion.div
             variants={fadeInUp}
-            className="flex min-h-0 items-center justify-center py-1 sm:py-2 lg:col-start-2 lg:row-span-2 lg:py-0"
+            className="flex items-center justify-center lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center"
           >
             <MatchDeck prizes={landing.prizes} />
           </motion.div>
 
           <motion.div
             variants={fadeInUp}
-            className="flex w-full flex-col items-stretch gap-2 lg:col-start-1 lg:row-start-2 lg:max-w-[420px] lg:items-start lg:gap-3"
+            className="flex w-full max-w-[420px] flex-col items-stretch gap-2 lg:col-start-1 lg:row-start-2 lg:max-w-[420px] lg:items-start lg:gap-3 lg:self-start"
           >
             <Link
               href={landing.cta.href}
@@ -110,7 +110,7 @@ export default function Page() {
         </div>
       </motion.section>
 
-      <footer className="mx-auto w-full max-w-[1180px] px-5 pb-2 text-center font-body text-[10px] text-white/45 sm:px-8 sm:pb-4 sm:text-[11px]">
+      <footer className="mx-auto w-full max-w-[1180px] px-5 pb-3 text-center font-body text-[10px] text-white/45 sm:px-8 sm:pb-4 sm:text-[11px]">
         {landing.footer}
       </footer>
     </main>
