@@ -330,7 +330,7 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 - Phase 3 (Hero live-verify, verify) — done — empty commit `44b7376`; user confirmed auto-cycle, drag in both directions, flick, mobile layout, CTA-to-404, clean console
 - Phase 4 (Sign-up screen, build) — done — commit `1ffe54f`, build/lint/tsc green; `/signup` route with Nombre/Correo/Teléfono, mocked Google button, `saveMockUser` writes to `localStorage.matchowner_waitlist_user`, routes to `/dashboard`
 - Phase 5 (Sign-up live-verify, verify) — pending — sign-up itself passed in live review, but the user rejected the landing's mobile layout during the same session; Phase 2.7 inserted to fix it before re-running this verify
-- Phase 2.7 (Hero fix — mobile layout, build) — pending
+- Phase 2.7 (Hero fix — mobile layout, build) — done — commit `cb05a50`, build/lint/tsc green; recomposed page.tsx as a single grid with explicit row/col placement (text → deck → action-pad on mobile; text+action-pad left col, deck right col on desktop), tightened mobile metrics, shrunk MatchDeck mobile size to 208×244, dropped outer "DESLIZA" caption
 - Phase 6 (Dashboard screen, build) — pending
 - Phase 7 (Dashboard end-to-end live-verify, verify) — pending
 
