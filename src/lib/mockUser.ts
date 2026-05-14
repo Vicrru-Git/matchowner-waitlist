@@ -37,3 +37,38 @@ export function getMockUser(): MockUser | null {
     return null;
   }
 }
+
+let cachedRaw: string | null = null;
+let cachedUser: MockUser | null = null;
+
+// Referentially stable snapshot for useSyncExternalStore — re-parses only when
+// the underlying localStorage string changes.
+export function getMockUserSnapshot(): MockUser | null {
+  if (typeof window === "undefined") return null;
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw === cachedRaw) return cachedUser;
+  cachedRaw = raw;
+  if (!raw) {
+    cachedUser = null;
+    return null;
+  }
+  try {
+    cachedUser = JSON.parse(raw) as MockUser;
+  } catch {
+    cachedUser = null;
+  }
+  return cachedUser;
+}
+
+const userListeners = new Set<() => void>();
+
+export function subscribeMockUser(fn: () => void) {
+  userListeners.add(fn);
+  return () => {
+    userListeners.delete(fn);
+  };
+}
+
+export function notifyMockUserChange() {
+  userListeners.forEach((fn) => fn());
+}

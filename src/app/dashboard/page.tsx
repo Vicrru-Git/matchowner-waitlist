@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
-import { getMockUser } from "@/lib/mockUser";
+import { getMockUser, getMockUserSnapshot, subscribeMockUser } from "@/lib/mockUser";
 import {
   bumpForAnswer,
   bumpForShare,
@@ -19,14 +19,12 @@ import { PositionCard } from "@/components/dashboard/PositionCard";
 import { QuestionCard } from "@/components/dashboard/QuestionCard";
 import { InviteBlock } from "@/components/dashboard/InviteBlock";
 
-const subscribeUser = () => () => {};
-
 export default function DashboardPage() {
   const router = useRouter();
 
   const user = useSyncExternalStore(
-    subscribeUser,
-    () => getMockUser(),
+    subscribeMockUser,
+    getMockUserSnapshot,
     () => null,
   );
 

@@ -46,7 +46,8 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 - **Done:** Phase 5 (Sign-up live-verify) — empty commit `6ab6443`. User confirmed form render, empty-submit validation, email format validation, happy-path submit → /dashboard, localStorage record, Google-button submit, mobile layout, clean console.
 - **Done:** Phase 2.8 (Hero fix — deck-anchored composition with swipe hint, build) — see Status tracker for SHA. Restructures the text column so CTA + progress sit with the headline, adds a `← Desliza para ver los premios →` arrow hint above the deck, drops the accent glow halo, and replaces Phase 2.7's fluid `clamp()` / `min-[Npx]:` sizing with stepped `sm:` / `lg:` breakpoints.
 - **Done:** Phase 6 (Dashboard screen, build) — see Status tracker for SHA. Build/lint/tsc green. `/dashboard` assembles PositionCard + QuestionCard + InviteBlock; `mockQueue` persists position to `localStorage` with deterministic init, floor 4, answer-bump 1, share-bump 5; reactive reads via `useSyncExternalStore` to satisfy React 19's `set-state-in-effect` rule.
-- **Next pending:** Phase 7 (Dashboard + end-to-end live-verify).
+- **Done:** Phase 6.5 (Dashboard fix — cached user snapshot, build) — see Status tracker for SHA. Phase 7 attempt 1 failed at step 1 with `getSnapshot should be cached to avoid an infinite loop`; `getMockUser()` returned a fresh `JSON.parse` object each call. Added cached `getMockUserSnapshot()` + `subscribeMockUser()` in `mockUser.ts` and wired the dashboard to use them.
+- **Next pending:** Phase 7 (Dashboard + end-to-end live-verify) — re-run after fix.
 - **Blocked relations:** strictly linear — Phase N+1 depends on Phase N. Verify phases (3, 5, 7) gate the next build phase.
 
 ## Invariants (every phase must preserve all)
@@ -272,6 +273,26 @@ Open `http://localhost:3000/signup` directly, or navigate via the hero CTA.
 **Status:** done — see Status tracker for commit SHA. Build/lint/tsc all green. `/dashboard` route assembles `PositionCard` + `QuestionCard` + `InviteBlock`; `mockQueue` writes deterministic-from-userId positions into `localStorage.matchowner_waitlist_position` and notifies subscribers via a tiny pub-sub; SSR-safe reads via `useSyncExternalStore` (chosen over `useEffect`+`setState` to satisfy React 19's `react-hooks/set-state-in-effect` lint). `questionForToday` rotates by day-of-year mod 5. Copy lives in `src/data/dashboard.ts`. Missing-user mounts redirect to `/signup`. Share buttons (Copy / WhatsApp / Email) each bump 5 once per mount via component state.
 **Stop after this phase.** Recommend `/clear` + `continue plan matchowner-waitlist-plan.md`.
 
+## Phase 6.5 — Dashboard fix: cached user snapshot   *(build phase, fix)*
+
+**Type:** build (inserted fix after Phase 7 attempt 1 failed at step 1 with a React runtime error: `The result of getSnapshot should be cached to avoid an infinite loop`).
+**Goal:** Make the `useSyncExternalStore` snapshot for the user referentially stable so the dashboard renders without looping.
+**Root cause:** `getMockUser()` in `src/lib/mockUser.ts` did `JSON.parse(localStorage.getItem(...))` on every call → returned a new object reference each time → React's `useSyncExternalStore` treated every snapshot as a change → infinite re-render.
+**Context to load:** this plan file; `src/lib/mockUser.ts`; `src/app/dashboard/page.tsx`.
+**Targets:** `src/lib/mockUser.ts` (add cached snapshot + subscription), `src/app/dashboard/page.tsx` (swap to cached APIs).
+**Change sketch (as shipped):**
+- `mockUser.ts`: added module-scope `cachedRaw` / `cachedUser` and `getMockUserSnapshot()` — reads `localStorage`, returns the cached parsed object if the raw string is unchanged, otherwise re-parses and updates the cache. Also added `subscribeMockUser(fn)` + `notifyMockUserChange()` for future cross-tab/cross-screen updates. `getMockUser()` is kept (non-cached) for one-shot reads in effects.
+- `dashboard/page.tsx`: imported `getMockUserSnapshot` + `subscribeMockUser`; dropped the inline `subscribeUser = () => () => {}` and the `() => getMockUser()` arrow; passed the cached functions directly to `useSyncExternalStore`. Redirect-guard `useEffect` still uses `getMockUser()` (single read, no subscription).
+**Invariants impacted:** none structural — same external behaviour, only fixes a runtime error.
+**Verification:**
+- `npm run build` exits 0.
+- `npx tsc --noEmit` exits 0.
+- `npm run lint` exits 0.
+- `grep -F 'getMockUserSnapshot' src/lib/mockUser.ts` returns a match.
+- `grep -F 'getMockUserSnapshot' src/app/dashboard/page.tsx` returns a match.
+**Status:** done — see Status tracker for SHA. Real proof of the fix is the next live-verify (re-run of Phase 7 from step 1).
+**Stop after this phase.** Recommend `/clear` + `continue plan matchowner-waitlist-plan.md`.
+
 ## Phase 7 — Dashboard + end-to-end live-verify   *(live-verify phase)*
 
 **Type:** live-verify. Verifies phase 6 (Dashboard) and the full demo flow `/` → `/signup` → `/dashboard`.
@@ -312,7 +333,8 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 - Phase 5 (Sign-up live-verify, verify) — done — empty commit `6ab6443`; user confirmed all 8 steps in the live app
 - Phase 2.8 (Hero fix — deck-anchored composition with swipe hint, build) — done — commit `d2be07a`, lint + tsc green (build skipped: sandbox blocks Google Fonts fetch); deck-anchored composition with swipe-hint arrows, glow halo removed, stepped breakpoints replace Phase 2.7 fluid sizing — visual confirmation on iPhone widths folded into Phase 7 mobile resize step. Script housekeeping (delete `scripts/mobile_screenshot.py`) in follow-up commit `06c2c8a`.
 - Phase 6 (Dashboard screen, build) — done — commit `571b33a`, build/lint/tsc green; `/dashboard` route with PositionCard + QuestionCard + InviteBlock, `mockQueue` writes to `localStorage.matchowner_waitlist_position` with pub-sub for reactive position, deterministic init from userId in [80,250], floor 4, answer-bump 1, share-bump 5; missing-user redirects to `/signup`
-- Phase 7 (Dashboard end-to-end live-verify, verify) — pending
+- Phase 6.5 (Dashboard fix — cached user snapshot, build) — done — commit `<pending>`, build/lint/tsc green; fixes infinite-loop runtime error from Phase 7 attempt 1 by adding cached `getMockUserSnapshot()` + `subscribeMockUser()` in `mockUser.ts` and wiring the dashboard's `useSyncExternalStore` to use them
+- Phase 7 (Dashboard end-to-end live-verify, verify) — pending (re-run after 6.5)
 
 ## Open questions / parked items
 
