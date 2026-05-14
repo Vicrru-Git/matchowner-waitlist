@@ -43,8 +43,8 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 - **Done:** Phase 2.6 (Hero fix — drop WalkingHand, drag-swipe deck, build) — see Status tracker for SHA; removes the walking-hand placeholder from the page (file kept on disk), centers and enlarges the deck, adds drag-to-swipe left/right with a tilt that tracks the finger.
 - **Done:** Phase 3 (Hero live-verify) — empty commit `44b7376`. Auto-cycle, drag-right, drag-left, flick, mobile layout, CTA → /signup 404, clean console — all confirmed by the user.
 - **Done:** Phase 4 (Sign-up screen, build) — commit `1ffe54f`; build/lint/tsc green, `/signup` route with Nombre/Correo/Teléfono fields, mocked Google button, localStorage persistence via `saveMockUser`, no backend calls.
-- **Partial:** Phase 5 (Sign-up live-verify) — sign-up itself passed, but the user re-reviewed the **landing** during the session and rejected its mobile layout. Phase 5 stays pending; user wants the landing fixed (Phase 2.7) before re-running live-verify.
-- **Next pending:** Phase 2.7 (Hero fix — mobile layout, build).
+- **Done:** Phase 5 (Sign-up live-verify) — empty commit `6ab6443`. User confirmed form render, empty-submit validation, email format validation, happy-path submit → /dashboard, localStorage record, Google-button submit, mobile layout, clean console.
+- **Next pending:** Phase 6 (Dashboard screen, build).
 - **Blocked relations:** strictly linear — Phase N+1 depends on Phase N. Verify phases (3, 5, 7) gate the next build phase.
 
 ## Invariants (every phase must preserve all)
@@ -161,28 +161,6 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 **Status:** done — see Status tracker for SHA. Real proof of the no-scroll claim and the drag UX is the next live-verify.
 **Stop after this phase.** Recommend `/clear` + `continue plan matchowner-waitlist-plan.md`.
 
-## Phase 2.7 — Hero fix: mobile layout   *(build phase, fix)*
-
-**Type:** build (inserted after Phase 5 live-verify revealed the landing didn't read well on mobile — the page overflowed `100svh` on 375×667 and the stacking felt disjointed despite the sign-up screen looking great).
-**Goal:** Same components, same copy, same palette — recompose the hero so it fits `100svh` on mobile (no overflow, no scroll) AND reads as a deliberate single composition rather than a vertical pile. Desktop layout (lg) preserved as-is.
-**Context to load:** this plan file; `src/app/page.tsx`; `src/components/landing/MatchDeck.tsx`; `src/data/landing.ts`.
-**Targets:** `src/app/page.tsx` (rewrite layout); `src/components/landing/MatchDeck.tsx` (slightly shrink mobile size if needed).
-**Change sketch (as shipped):**
-- `page.tsx` uses a grid with explicit row/col placement so the same three blocks (text, deck, CTA+progress) reorder cleanly between mobile (text → deck → CTA-pad) and desktop (text+CTA-pad in left col, deck in right col) without DOM duplication.
-- Mobile metrics: headline ~22px, subhead ~13px with `leading-snug`, deck shrunk to ~210×260 on mobile, tighter gaps (`gap-3` to `gap-4`).
-- The outer `← DESLIZA PARA VER LOS PREMIOS →` caption is dropped — the in-card `← Desliza →` hint already communicates the affordance, and removing it recovers vertical space.
-- CTA + progress live in a compact "action pad" with subtle visual cohesion (the progress bar sits directly under the orange CTA on mobile).
-- Footer kept minimal so it doesn't steal screen height.
-**Invariants impacted:** 2, 3, 4, 5, 6.
-**Verification:**
-- `npm run build`, `npm run lint`, `npx tsc --noEmit` all exit 0.
-- `grep -F 'h-[100svh]' src/app/page.tsx` returns a match.
-- `grep -F 'overflow-hidden' src/app/page.tsx` returns a match.
-- `grep -F 'deckCaption' src/app/page.tsx` returns nothing (caption no longer rendered on the page; data may remain in `landing.ts` for future use).
-- `grep -RE 'fetch\(|axios|supabase' src/app/page.tsx` returns nothing.
-**Status:** done — see Status tracker for SHA. Build/lint/tsc green; visual proof is the re-run of Phase 5 (which now also re-verifies the landing on mobile).
-**Stop after this phase.** Recommend `/clear` + `continue plan matchowner-waitlist-plan.md` to re-run Phase 5.
-
 ## Phase 3 — Hero live-verify   *(live-verify phase)*
 
 **Type:** live-verify. Verifies phase 2 (Landing / Hero screen) in the running app.
@@ -256,7 +234,7 @@ Open `http://localhost:3000/signup` directly, or navigate via the hero CTA.
 8. Confirm no console errors.
 **On all-OK ceremony:** empty commit `phase 5: verify — Sign-up screen` + push; update Status tracker.
 **On failure:** do not commit; user adds a fix phase and re-enters live-verify after.
-**Status:** pending.
+**Status:** done — empty commit `6ab6443`; user confirmed all 8 steps (render, empty-submit validation, email format error, happy-path submit, localStorage record, Google-button submit, mobile layout, clean console). No remote, push deferred.
 **Stop after this phase.** Recommend `/clear` + `continue plan matchowner-waitlist-plan.md`.
 
 ## Phase 6 — Dashboard screen   *(build phase)*
@@ -329,8 +307,7 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 - Phase 2.6 (Hero fix — drop WalkingHand, drag-swipe deck, build) — done — commit `e2abc78`, build/lint/tsc green; deck is now centered, enlarged, and drag-to-swipe; WalkingHand removed from page (file kept on disk)
 - Phase 3 (Hero live-verify, verify) — done — empty commit `44b7376`; user confirmed auto-cycle, drag in both directions, flick, mobile layout, CTA-to-404, clean console
 - Phase 4 (Sign-up screen, build) — done — commit `1ffe54f`, build/lint/tsc green; `/signup` route with Nombre/Correo/Teléfono, mocked Google button, `saveMockUser` writes to `localStorage.matchowner_waitlist_user`, routes to `/dashboard`
-- Phase 5 (Sign-up live-verify, verify) — pending — sign-up itself passed in live review, but the user rejected the landing's mobile layout during the same session; Phase 2.7 inserted to fix it before re-running this verify
-- Phase 2.7 (Hero fix — mobile layout, build) — done — commit `cb05a50`, build/lint/tsc green; recomposed page.tsx as a single grid with explicit row/col placement (text → deck → action-pad on mobile; text+action-pad left col, deck right col on desktop), tightened mobile metrics, shrunk MatchDeck mobile size to 208×244, dropped outer "DESLIZA" caption
+- Phase 5 (Sign-up live-verify, verify) — done — empty commit `6ab6443`; user confirmed all 8 steps in the live app
 - Phase 6 (Dashboard screen, build) — pending
 - Phase 7 (Dashboard end-to-end live-verify, verify) — pending
 
