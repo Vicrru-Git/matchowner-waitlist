@@ -45,7 +45,8 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 - **Done:** Phase 4 (Sign-up screen, build) — commit `1ffe54f`; build/lint/tsc green, `/signup` route with Nombre/Correo/Teléfono fields, mocked Google button, localStorage persistence via `saveMockUser`, no backend calls.
 - **Done:** Phase 5 (Sign-up live-verify) — empty commit `6ab6443`. User confirmed form render, empty-submit validation, email format validation, happy-path submit → /dashboard, localStorage record, Google-button submit, mobile layout, clean console.
 - **Done:** Phase 2.8 (Hero fix — deck-anchored composition with swipe hint, build) — see Status tracker for SHA. Restructures the text column so CTA + progress sit with the headline, adds a `← Desliza para ver los premios →` arrow hint above the deck, drops the accent glow halo, and replaces Phase 2.7's fluid `clamp()` / `min-[Npx]:` sizing with stepped `sm:` / `lg:` breakpoints.
-- **Next pending:** Phase 6 (Dashboard screen, build).
+- **Done:** Phase 6 (Dashboard screen, build) — see Status tracker for SHA. Build/lint/tsc green. `/dashboard` assembles PositionCard + QuestionCard + InviteBlock; `mockQueue` persists position to `localStorage` with deterministic init, floor 4, answer-bump 1, share-bump 5; reactive reads via `useSyncExternalStore` to satisfy React 19's `set-state-in-effect` rule.
+- **Next pending:** Phase 7 (Dashboard + end-to-end live-verify).
 - **Blocked relations:** strictly linear — Phase N+1 depends on Phase N. Verify phases (3, 5, 7) gate the next build phase.
 
 ## Invariants (every phase must preserve all)
@@ -268,7 +269,7 @@ Open `http://localhost:3000/signup` directly, or navigate via the hero CTA.
 - `src/app/dashboard/page.tsx`, `src/lib/mockQueue.ts`, `src/data/questions.ts` all exist.
 - `grep -RE 'fetch\(|axios|supabase' src/app/dashboard` returns nothing (no real backend).
 - `grep -F 'localStorage' src/lib/mockQueue.ts` returns a match.
-**Status:** pending.
+**Status:** done — see Status tracker for commit SHA. Build/lint/tsc all green. `/dashboard` route assembles `PositionCard` + `QuestionCard` + `InviteBlock`; `mockQueue` writes deterministic-from-userId positions into `localStorage.matchowner_waitlist_position` and notifies subscribers via a tiny pub-sub; SSR-safe reads via `useSyncExternalStore` (chosen over `useEffect`+`setState` to satisfy React 19's `react-hooks/set-state-in-effect` lint). `questionForToday` rotates by day-of-year mod 5. Copy lives in `src/data/dashboard.ts`. Missing-user mounts redirect to `/signup`. Share buttons (Copy / WhatsApp / Email) each bump 5 once per mount via component state.
 **Stop after this phase.** Recommend `/clear` + `continue plan matchowner-waitlist-plan.md`.
 
 ## Phase 7 — Dashboard + end-to-end live-verify   *(live-verify phase)*
@@ -310,7 +311,7 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 - Phase 4 (Sign-up screen, build) — done — commit `1ffe54f`, build/lint/tsc green; `/signup` route with Nombre/Correo/Teléfono, mocked Google button, `saveMockUser` writes to `localStorage.matchowner_waitlist_user`, routes to `/dashboard`
 - Phase 5 (Sign-up live-verify, verify) — done — empty commit `6ab6443`; user confirmed all 8 steps in the live app
 - Phase 2.8 (Hero fix — deck-anchored composition with swipe hint, build) — done — commit `d2be07a`, lint + tsc green (build skipped: sandbox blocks Google Fonts fetch); deck-anchored composition with swipe-hint arrows, glow halo removed, stepped breakpoints replace Phase 2.7 fluid sizing — visual confirmation on iPhone widths folded into Phase 7 mobile resize step. Script housekeeping (delete `scripts/mobile_screenshot.py`) in follow-up commit `06c2c8a`.
-- Phase 6 (Dashboard screen, build) — pending
+- Phase 6 (Dashboard screen, build) — done — commit `__PHASE6_SHA__`, build/lint/tsc green; `/dashboard` route with PositionCard + QuestionCard + InviteBlock, `mockQueue` writes to `localStorage.matchowner_waitlist_position` with pub-sub for reactive position, deterministic init from userId in [80,250], floor 4, answer-bump 1, share-bump 5; missing-user redirects to `/signup`
 - Phase 7 (Dashboard end-to-end live-verify, verify) — pending
 
 ## Open questions / parked items
