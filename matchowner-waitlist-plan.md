@@ -44,6 +44,7 @@ Each phase is self-contained — its `Context to load` lists the exact files to 
 - **Done:** Phase 3 (Hero live-verify) — empty commit `44b7376`. Auto-cycle, drag-right, drag-left, flick, mobile layout, CTA → /signup 404, clean console — all confirmed by the user.
 - **Done:** Phase 4 (Sign-up screen, build) — commit `1ffe54f`; build/lint/tsc green, `/signup` route with Nombre/Correo/Teléfono fields, mocked Google button, localStorage persistence via `saveMockUser`, no backend calls.
 - **Done:** Phase 5 (Sign-up live-verify) — empty commit `6ab6443`. User confirmed form render, empty-submit validation, email format validation, happy-path submit → /dashboard, localStorage record, Google-button submit, mobile layout, clean console.
+- **Done:** Phase 2.8 (Hero fix — deck-anchored composition with swipe hint, build) — see Status tracker for SHA. Restructures the text column so CTA + progress sit with the headline, adds a `← Desliza para ver los premios →` arrow hint above the deck, drops the accent glow halo, and replaces Phase 2.7's fluid `clamp()` / `min-[Npx]:` sizing with stepped `sm:` / `lg:` breakpoints.
 - **Next pending:** Phase 6 (Dashboard screen, build).
 - **Blocked relations:** strictly linear — Phase N+1 depends on Phase N. Verify phases (3, 5, 7) gate the next build phase.
 
@@ -308,6 +309,7 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 - Phase 3 (Hero live-verify, verify) — done — empty commit `44b7376`; user confirmed auto-cycle, drag in both directions, flick, mobile layout, CTA-to-404, clean console
 - Phase 4 (Sign-up screen, build) — done — commit `1ffe54f`, build/lint/tsc green; `/signup` route with Nombre/Correo/Teléfono, mocked Google button, `saveMockUser` writes to `localStorage.matchowner_waitlist_user`, routes to `/dashboard`
 - Phase 5 (Sign-up live-verify, verify) — done — empty commit `6ab6443`; user confirmed all 8 steps in the live app
+- Phase 2.8 (Hero fix — deck-anchored composition with swipe hint, build) — done — commit `<pending>`, lint + tsc green (build skipped: sandbox blocks Google Fonts fetch); deck-anchored composition with swipe-hint arrows, glow halo removed, stepped breakpoints replace Phase 2.7 fluid sizing — visual confirmation on iPhone widths folded into Phase 7 mobile resize step
 - Phase 6 (Dashboard screen, build) — pending
 - Phase 7 (Dashboard end-to-end live-verify, verify) — pending
 
