@@ -311,7 +311,7 @@ Open `http://localhost:3000`. **Before starting, clear `localStorage` for this o
 - Phase 4 (Sign-up screen, build) — done — commit `1ffe54f`, build/lint/tsc green; `/signup` route with Nombre/Correo/Teléfono, mocked Google button, `saveMockUser` writes to `localStorage.matchowner_waitlist_user`, routes to `/dashboard`
 - Phase 5 (Sign-up live-verify, verify) — done — empty commit `6ab6443`; user confirmed all 8 steps in the live app
 - Phase 2.8 (Hero fix — deck-anchored composition with swipe hint, build) — done — commit `d2be07a`, lint + tsc green (build skipped: sandbox blocks Google Fonts fetch); deck-anchored composition with swipe-hint arrows, glow halo removed, stepped breakpoints replace Phase 2.7 fluid sizing — visual confirmation on iPhone widths folded into Phase 7 mobile resize step. Script housekeeping (delete `scripts/mobile_screenshot.py`) in follow-up commit `06c2c8a`.
-- Phase 6 (Dashboard screen, build) — done — commit `__PHASE6_SHA__`, build/lint/tsc green; `/dashboard` route with PositionCard + QuestionCard + InviteBlock, `mockQueue` writes to `localStorage.matchowner_waitlist_position` with pub-sub for reactive position, deterministic init from userId in [80,250], floor 4, answer-bump 1, share-bump 5; missing-user redirects to `/signup`
+- Phase 6 (Dashboard screen, build) — done — commit `571b33a`, build/lint/tsc green; `/dashboard` route with PositionCard + QuestionCard + InviteBlock, `mockQueue` writes to `localStorage.matchowner_waitlist_position` with pub-sub for reactive position, deterministic init from userId in [80,250], floor 4, answer-bump 1, share-bump 5; missing-user redirects to `/signup`
 - Phase 7 (Dashboard end-to-end live-verify, verify) — pending
 
 ## Open questions / parked items
