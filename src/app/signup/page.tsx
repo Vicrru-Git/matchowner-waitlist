@@ -49,11 +49,18 @@ export default function SignupPage({
     setAuthError(null);
 
     const supabase = createClientBrowser();
+    // Redirect the email-verification link back to this same origin
+    // (e.g. https://waitlist.matchowner.com) instead of Supabase's default
+    // site_url. The /auth/callback route exchanges the code for a session.
+    const emailRedirectTo = `${window.location.origin}/auth/callback${
+      ref ? `?ref=${encodeURIComponent(ref)}` : ""
+    }`;
     const { error } = await supabase.auth.signUp({
       email: email.trim(),
       password,
       options: {
         data: { name: name.trim(), phone },
+        emailRedirectTo,
       },
     });
 
