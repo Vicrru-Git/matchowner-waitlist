@@ -1,0 +1,7 @@
+{
+  "$comment": "Vercel dashboard setup: (1) Import repo Vicrru/matchowner-waitlist. (2) Set env vars: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, NEXT_PUBLIC_APP_URL, RESEND_API_KEY. (3) In Supabase Auth > URL Configuration, add the Vercel production URL to redirect_urls. (4) In Supabase Auth > Providers > Google, add the production callback URL.",
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install"
+}

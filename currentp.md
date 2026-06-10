@@ -490,7 +490,7 @@ Per-phase rollback: `/unship` operates phase-agnostically on the most recent com
 - Phase 3 (Queue + referral server actions) — done — src/features/waitlist/waitlist.queries.ts, src/features/waitlist/waitlist.actions.ts (extended), src/app/r/[code]/page.tsx
 - Phase 4 (Dashboard wired to real data + delete mocks) — done — src/app/dashboard/page.tsx (async SC), src/components/dashboard/{PositionCard,QuestionCard,InviteBlock}.tsx (props), src/lib/mock{User,Queue}.ts (deleted)
 - Phase 5 (Welcome email via Resend) — done — src/features/waitlist/email.ts (new), src/features/waitlist/waitlist.actions.ts (fire-and-forget sendWelcomeEmail in createEntry), package.json (resend added)
-- Phase 6 (GitHub remote + Vercel deployment config) — pending
+- Phase 6 (GitHub remote + Vercel deployment config) — done — vercel.json (new); GitHub remote already configured at Vicrru-Git/matchowner-waitlist (gh repo create skipped)
 
 ## Open questions / parked items
 
