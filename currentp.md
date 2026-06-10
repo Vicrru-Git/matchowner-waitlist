@@ -485,7 +485,7 @@ Per-phase rollback: `/unship` operates phase-agnostically on the most recent com
 ## Status tracker
 
 - Phase 0 (review) — done — applied 4 (async searchParams/params, drop referred_by UNIQUE, DailyQuestion type)
-- Phase 1 (Supabase setup + schema) — pending
+- Phase 1 (Supabase setup + schema) — done — supabase/migrations/20260610000000_waitlist.sql, src/shared/supabase/{client,server,index}.ts, src/types/supabase.ts, .env.local.example
 - Phase 2 (Auth: middleware + callback + signup rewrite) — pending
 - Phase 3 (Queue + referral server actions) — pending
 - Phase 4 (Dashboard wired to real data + delete mocks) — pending
