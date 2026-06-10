@@ -147,7 +147,7 @@ Per-phase rollback: `/unship` operates phase-agnostically on the most recent com
     user_id         uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     position        int  NOT NULL CHECK (position >= 4),
     referral_code   text NOT NULL UNIQUE DEFAULT lower(substr(md5(gen_random_uuid()::text), 1, 8)),
-    referred_by     uuid UNIQUE REFERENCES waitlist_entries(id) ON DELETE SET NULL,
+    referred_by     uuid REFERENCES waitlist_entries(id) ON DELETE SET NULL,
     answered_date   date,
     share_bumps_used int NOT NULL DEFAULT 0 CHECK (share_bumps_used <= 3),
     created_at      timestamptz NOT NULL DEFAULT now(),
@@ -255,12 +255,12 @@ Per-phase rollback: `/unship` operates phase-agnostically on the most recent com
   - Keep the file as a `'use client'` component. Preserve all JSX, Tailwind classes, Spanish copy, validation logic, and Framer Motion wrappers exactly.
   - Add `password` to form state (type string, initial `''`). Add a password `<input type="password">` field with label "Contraseña" between Correo and Teléfono, required, min 8 characters, matching the existing input styling.
   - Add password validation: if password.length < 8 show "La contraseña debe tener al menos 8 caracteres".
-  - The page component must accept `{ searchParams }: { searchParams: { ref?: string } }` as props (server passes these from the URL).
+  - The page component is `'use client'`, so `searchParams` is a Promise in Next.js 16. Accept `{ searchParams }: { searchParams: Promise<{ ref?: string }> }` and read it with `const { ref } = React.use(searchParams)` (import `use` from `react`) at the top of the component body. Use `ref` (not `searchParams?.ref`) in all downstream calls.
   - Replace the `saveMockUser` import and call with:
     - Import `createClientBrowser` from `@/shared/supabase/client`.
     - Import `createEntryAction` from `@/features/waitlist/waitlist.actions`.
-    - On form submit: `const supabase = createClientBrowser(); const { error } = await supabase.auth.signUp({ email, password, options: { data: { name, phone } } })`. On success (no error): `await createEntryAction(searchParams?.ref)`, then `router.push('/dashboard')`. On error: surface Supabase error message in Spanish.
-    - Google button onClick: `const supabase = createClientBrowser(); await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: \`\${window.location.origin}/auth/callback?ref=\${searchParams?.ref ?? ''}\` } })`.
+    - On form submit: `const supabase = createClientBrowser(); const { error } = await supabase.auth.signUp({ email, password, options: { data: { name, phone } } })`. On success (no error): `await createEntryAction(ref)`, then `router.push('/dashboard')`. On error: surface Supabase error message in Spanish.
+    - Google button onClick: `const supabase = createClientBrowser(); await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: \`\${window.location.origin}/auth/callback?ref=\${ref ?? ''}\` } })`.
   - Do NOT delete `src/lib/mockUser.ts` — dashboard still imports it (deleted in Phase 4).
 **Invariants impacted:** 3, 7, 8, 9, 10.
 **State-file upkeep:** per Subagent prompt.
@@ -302,8 +302,9 @@ Per-phase rollback: `/unship` operates phase-agnostically on the most recent com
   - `claimReferralAction(referralCode: string)`:
     - This is called by `createEntry` (Phase 2) — already handled there. No standalone action needed. (Include as a no-op export stub so imports don't break if any file references it.)
 - Write `src/app/r/[code]/page.tsx` as a **server component** (no `'use client'`):
-  - Receives `{ params }: { params: { code: string } }`.
-  - Calls `redirect(\`/signup?ref=\${params.code}\`)` from `next/navigation`.
+  - Receives `{ params }: { params: Promise<{ code: string }> }` (Next.js 16 — params is a Promise).
+  - Destructure with `const { code } = await params`.
+  - Calls `redirect(\`/signup?ref=\${code}\`)` from `next/navigation`.
   - No HTML rendered — pure redirect. This is a server-only redirect; no cookie or localStorage needed.
 **Invariants impacted:** 4, 5, 7, 8, 10.
 **State-file upkeep:** per Subagent prompt.
@@ -349,7 +350,7 @@ Per-phase rollback: `/unship` operates phase-agnostically on the most recent com
   - Keep Framer Motion number animation (animate on `position` prop change using `motion.div` + `key={position}` or `useMotionValue`).
 - Edit `src/components/dashboard/QuestionCard.tsx`:
   - Remove `bumpForAnswer` import from mockQueue.
-  - Accept `{ question, answeredToday }: { question: Question; answeredToday: boolean }` props.
+  - Accept `{ question, answeredToday }: { question: DailyQuestion; answeredToday: boolean }` props (import `DailyQuestion` from `@/data/questions`).
   - On answer submit: call `await answerQuestionAction()` (imported from `@/features/waitlist/waitlist.actions`).
   - If `answeredToday` is true, render the "ya respondiste hoy" state immediately.
 - Edit `src/components/dashboard/InviteBlock.tsx`:
@@ -483,7 +484,7 @@ Per-phase rollback: `/unship` operates phase-agnostically on the most recent com
 
 ## Status tracker
 
-- Phase 0 (review) — pending
+- Phase 0 (review) — done — applied 4 (async searchParams/params, drop referred_by UNIQUE, DailyQuestion type)
 - Phase 1 (Supabase setup + schema) — pending
 - Phase 2 (Auth: middleware + callback + signup rewrite) — pending
 - Phase 3 (Queue + referral server actions) — pending
