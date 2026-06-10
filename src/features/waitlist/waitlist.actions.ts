@@ -2,6 +2,7 @@
 
 import { createClient } from '@supabase/supabase-js'
 import { createClientServer } from '@/shared/supabase/server'
+import { sendWelcomeEmail } from './email'
 
 // Shared helper — NOT a server action. Called by createEntryAction and the OAuth callback route.
 export async function createEntry(userId: string, referralCode?: string): Promise<void> {
@@ -53,6 +54,17 @@ export async function createEntry(userId: string, referralCode?: string): Promis
         .eq('id', referrer.id)
     }
   }
+
+  // fire-and-forget welcome email — do not await or rethrow
+  try {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://matchowner.es'
+    const { data: { user } } = await serviceClient.auth.admin.getUserById(userId)
+    if (user?.email) {
+      const name = (user.user_metadata?.name as string) ?? user.email
+      const referralLink = `${appUrl}/r/${newEntry.referral_code}`
+      sendWelcomeEmail(user.email, name, position, referralLink).catch(() => {})
+    }
+  } catch { /* ignore */ }
 }
 
 // Server action: called from signup page after email/password signup.

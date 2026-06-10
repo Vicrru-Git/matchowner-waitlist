@@ -489,7 +489,7 @@ Per-phase rollback: `/unship` operates phase-agnostically on the most recent com
 - Phase 2 (Auth: middleware + callback + signup rewrite) — done — src/middleware.ts, src/app/auth/callback/route.ts, src/features/waitlist/waitlist.actions.ts, src/app/signup/page.tsx
 - Phase 3 (Queue + referral server actions) — done — src/features/waitlist/waitlist.queries.ts, src/features/waitlist/waitlist.actions.ts (extended), src/app/r/[code]/page.tsx
 - Phase 4 (Dashboard wired to real data + delete mocks) — done — src/app/dashboard/page.tsx (async SC), src/components/dashboard/{PositionCard,QuestionCard,InviteBlock}.tsx (props), src/lib/mock{User,Queue}.ts (deleted)
-- Phase 5 (Welcome email via Resend) — pending
+- Phase 5 (Welcome email via Resend) — done — src/features/waitlist/email.ts (new), src/features/waitlist/waitlist.actions.ts (fire-and-forget sendWelcomeEmail in createEntry), package.json (resend added)
 - Phase 6 (GitHub remote + Vercel deployment config) — pending
 
 ## Open questions / parked items
