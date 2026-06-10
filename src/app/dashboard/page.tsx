@@ -1,57 +1,52 @@
-"use client";
-
-import { useEffect, useSyncExternalStore } from "react";
+import { redirect } from "next/navigation";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
-import { getMockUser, getMockUserSnapshot, subscribeMockUser } from "@/lib/mockUser";
-import {
-  bumpForAnswer,
-  bumpForShare,
-  readPositionSnapshot,
-  subscribePosition,
-} from "@/lib/mockQueue";
+import { createClientServer } from "@/shared/supabase/server";
+import { getEntry } from "@/features/waitlist/waitlist.queries";
+import { createEntry } from "@/features/waitlist/waitlist.actions";
 import { questionForToday } from "@/data/questions";
 import { dashboard } from "@/data/dashboard";
 import { PositionCard } from "@/components/dashboard/PositionCard";
 import { QuestionCard } from "@/components/dashboard/QuestionCard";
 import { InviteBlock } from "@/components/dashboard/InviteBlock";
 
-export default function DashboardPage() {
-  const router = useRouter();
+export default async function DashboardPage() {
+  const supabase = await createClientServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const user = useSyncExternalStore(
-    subscribeMockUser,
-    getMockUserSnapshot,
-    () => null,
-  );
-
-  const position = useSyncExternalStore(
-    subscribePosition,
-    () => (user ? readPositionSnapshot(user.userId) : 0),
-    () => 0,
-  );
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (getMockUser() === null) {
-      router.replace("/signup");
-    }
-  }, [router]);
-
+  // Middleware already redirects unauthenticated users — this is a defensive guard.
   if (!user) {
-    return (
-      <main className="grid min-h-[100svh] place-items-center bg-[var(--bg-gray)] text-[var(--text-muted)]">
-        <p className="font-body text-[14px]">Cargando…</p>
-      </main>
-    );
+    redirect("/signup");
   }
 
-  const firstName = user.name.split(" ")[0] || user.name;
-  const inviteLink = `https://matchowner.example/r/${user.userId}`;
+  let entry = await getEntry(user.id);
+
+  // Entry may be absent if OAuth callback failed to call createEntry — recover here.
+  if (!entry) {
+    await createEntry(user.id);
+    entry = await getEntry(user.id);
+  }
+
+  // If entry is still null after recovery attempt, use safe fallback values.
+  const position = entry?.position ?? 250;
+  const referralCode = entry?.referral_code ?? "";
+  const shareBumpsUsed = entry?.share_bumps_used ?? 0;
+  const answeredToday =
+    entry?.answered_date === new Date().toISOString().slice(0, 10);
+
   const question = questionForToday();
+  const firstName = (
+    (user.user_metadata?.name as string | undefined) ??
+    user.email ??
+    "Usuario"
+  )
+    .split(" ")[0];
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://matchowner.es";
 
   return (
     <main
@@ -99,13 +94,11 @@ export default function DashboardPage() {
             variants={fadeInUp}
             className="grid gap-3 sm:gap-4 lg:grid-cols-2"
           >
-            <QuestionCard
-              question={question}
-              onAnswer={() => bumpForAnswer(user.userId)}
-            />
+            <QuestionCard question={question} answeredToday={answeredToday} />
             <InviteBlock
-              link={inviteLink}
-              onShare={() => bumpForShare(user.userId)}
+              referralCode={referralCode}
+              shareBumpsUsed={shareBumpsUsed}
+              appUrl={appUrl}
             />
           </motion.div>
         </motion.section>

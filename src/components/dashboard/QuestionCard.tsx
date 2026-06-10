@@ -5,22 +5,23 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, CheckCircle2, MessageSquareText } from "lucide-react";
 import { dashboard } from "@/data/dashboard";
 import type { DailyQuestion } from "@/data/questions";
+import { answerQuestionAction } from "@/features/waitlist/waitlist.actions";
 
 export function QuestionCard({
   question,
-  onAnswer,
+  answeredToday,
 }: {
   question: DailyQuestion;
-  onAnswer: () => void;
+  answeredToday: boolean;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
-  const [answered, setAnswered] = useState(false);
+  const [answered, setAnswered] = useState(answeredToday);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!selected || answered) return;
     setAnswered(true);
-    onAnswer();
+    await answerQuestionAction();
   }
 
   return (

@@ -3,7 +3,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown } from "lucide-react";
 import { dashboard } from "@/data/dashboard";
-import { queueConfig } from "@/lib/mockQueue";
+
+const TOTAL_SEATS = 500;
 
 export function PositionCard({ position }: { position: number }) {
   const ahead = Math.max(0, position - 1);
@@ -12,8 +13,7 @@ export function PositionCard({ position }: { position: number }) {
     Math.max(
       0,
       Math.round(
-        ((queueConfig.totalSeats - position) / (queueConfig.totalSeats - 1)) *
-          100,
+        ((TOTAL_SEATS - position) / (TOTAL_SEATS - 1)) * 100,
       ),
     ),
   );
@@ -62,7 +62,7 @@ export function PositionCard({ position }: { position: number }) {
           </motion.span>
         </AnimatePresence>
         <span className="mb-2 font-body text-[13px] text-white/70 sm:text-[14px]">
-          {dashboard.position.of(queueConfig.totalSeats)}
+          {dashboard.position.of(TOTAL_SEATS)}
         </span>
       </div>
 
