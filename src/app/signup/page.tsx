@@ -1,17 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
-import { saveMockUser } from "@/lib/mockUser";
+import { createClientBrowser } from "@/shared/supabase/client";
+import { createEntryAction } from "@/features/waitlist/waitlist.actions";
 import { signup } from "@/data/signup";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-type Errors = Partial<Record<"name" | "email", string>>;
+type Errors = Partial<Record<"name" | "email" | "password", string>>;
 
 function GoogleGlyph() {
   return (
@@ -36,13 +37,20 @@ function GoogleGlyph() {
   );
 }
 
-export default function SignupPage() {
+export default function SignupPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ ref?: string }>;
+}) {
+  const { ref } = use(searchParams);
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState<null | "form" | "google">(null);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   function validate(): Errors {
     const next: Errors = {};
@@ -50,28 +58,48 @@ export default function SignupPage() {
     if (!email.trim()) next.email = signup.errors.emailRequired;
     else if (!EMAIL_RE.test(email.trim()))
       next.email = signup.errors.emailInvalid;
+    if (password.length < 8)
+      next.password = "La contraseña debe tener al menos 8 caracteres";
     return next;
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const v = validate();
     setErrors(v);
     if (Object.keys(v).length > 0) return;
     setSubmitting("form");
-    saveMockUser({ name, email, phone, provider: "form" });
+    setAuthError(null);
+
+    const supabase = createClientBrowser();
+    const { error } = await supabase.auth.signUp({
+      email: email.trim(),
+      password,
+      options: {
+        data: { name: name.trim(), phone },
+      },
+    });
+
+    if (error) {
+      setAuthError(error.message);
+      setSubmitting(null);
+      return;
+    }
+
+    await createEntryAction(ref);
     router.push("/dashboard");
   }
 
-  function handleGoogle() {
+  async function handleGoogle() {
     setSubmitting("google");
-    saveMockUser({
-      name: name.trim() || "Invitado Google",
-      email: email.trim() || "invitado@google.mock",
-      phone,
+    setAuthError(null);
+    const supabase = createClientBrowser();
+    await supabase.auth.signInWithOAuth({
       provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?ref=${ref ?? ""}`,
+      },
     });
-    router.push("/dashboard");
   }
 
   return (
@@ -183,6 +211,16 @@ export default function SignupPage() {
                 autoComplete="email"
               />
               <Field
+                id="password"
+                type="password"
+                label="Contraseña"
+                placeholder="Mínimo 8 caracteres"
+                value={password}
+                onChange={setPassword}
+                error={errors.password}
+                autoComplete="new-password"
+              />
+              <Field
                 id="phone"
                 type="tel"
                 label={signup.fields.phone.label}
@@ -192,6 +230,15 @@ export default function SignupPage() {
                 onChange={setPhone}
                 autoComplete="tel"
               />
+
+              {authError && (
+                <p
+                  role="alert"
+                  className="rounded-lg bg-[var(--secondary)]/10 px-3 py-2 font-body text-[12px] text-[var(--secondary)]"
+                >
+                  {authError}
+                </p>
+              )}
 
               <button
                 type="submit"
